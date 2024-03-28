@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[36]:
+# In[29]:
 
 
 import sqlite3
@@ -12,18 +12,23 @@ get_ipython().system('pip install --upgrade SQLAlchemy==1.4.46')
 
 
 
-# In[ ]:
+# In[30]:
 
 
 # helper function to run SQL scripts
 def execSQL(conn,query):
   conn.execute(query) # execute an SQL query
   conn.commit() # "commit" that query in order to make its action permanent
+
+def allrowsSelect(conn,query):
+    cursor = conn.execute(query)
+    for row in cursor:
+        print(row)
     
 conn = sqlite3.connect("wardrobe_management.db") # creates the database if it is not already there.
 
 
-# In[46]:
+# In[101]:
 
 
 # This block contains all the queries used
@@ -34,10 +39,26 @@ conn = sqlite3.connect("wardrobe_management.db") # creates the database if it is
 ### table for user ###
 # id: primary key for identifying unique individuals using the app, will increment as users are added
 # created_at: timestamp of when account is created
-createUser='''
+createUserTable='''
 CREATE TABLE IF NOT EXISTS user (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id integer PRIMARY KEY autoincrement,
+    username TEXT NOT NULL,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+'''
+
+createCMD='''
+CREATE TABLE movie (
+	id integer PRIMARY KEY autoincrement,
+	title text,
+	director text,
+	year text,
+	runtime integer,
+	genre text,
+	budget real,
+	gross real
 );
 '''
 # futureplans... will create another table containing secure login information that
@@ -63,7 +84,7 @@ CREATE TABLE IF NOT EXISTS user (
 
 # user_id: foreign key to connect between users to help identify whose clothes it is
 # image_link: cloud hosted image link of uploaded clothing
-createClothes='''
+createClothesTable='''
 CREATE TABLE IF NOT EXISTS clothing (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -89,7 +110,7 @@ CREATE TABLE IF NOT EXISTS clothing (
 # clothing_id: clothing worn in logs, reference as foreign key to 'clothing' table
 # weather: weather data based on given location (NOT SURE HOW TO IMPLEMENT THIS YET)
 # notes: user-inputted notes of their choosing
-createLogs='''
+createLogsTable='''
 CREATE TABLE IF NOT EXISTS daily_logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
@@ -106,13 +127,14 @@ CREATE TABLE IF NOT EXISTS daily_logs (
 ## give users options based on their existing wardrobe
 
 ## executes the code to create logs
-execSQL(conn,createUser)
-execSQL(conn,createClothes)
-execSQL(conn,createLogs)
+execSQL(conn,createUserTable)
+execSQL(conn,createClothesTable)
+execSQL(conn,createLogsTable)
 
 ## methods i need to make ##
 
-# add user
+allrowsSelect(conn,"select * from pragma_table_info('clothing')")
+
 # remove clothing
 # add clothing
 # add log
@@ -120,8 +142,80 @@ execSQL(conn,createLogs)
 # print log
 
 
+
+# In[91]:
+
+
+# these functions do their job but do not yet account for duplicate values, need to fix to prevent security flaws
+
+# add user
+def addUser(username, email, password):
+    checkDuplicateQuery = f'''
+    SELECT 1 from user
+    WHERE username = '{username}' OR email = '{email}'
+    LIMIT 1;
+    '''
+    userExists = execSQL(conn,checkDuplicateQuery)
+    
+    if userExists:
+        print("error, user already exists")
+        return
+        
+    query = f'''
+    INSERT INTO user (username, email, password) 
+    VALUES ( '{username}', '{email}', '{password}');
+    '''
+    execSQL(conn, query)
+    
+# delete user
+def deleteUser(email):
+    query = f'''
+    DELETE from user 
+    WHERE email = '{email}';
+    '''
+    try:
+        execSQL(conn, query)
+    except:
+        print('User does not exist!')
+
+# get user info 
+def getUserInfo(username):
+    query = f'''
+    SELECT * from user
+    WHERE username = '{username}';
+    '''
+    allrowsSelect(conn,query)
+
+# test cases
+
+
+
+# In[99]:
+
+
+#addUser('username1','gmail','foobar')
+#addUser('username2','yahoo','barfoo')
+#print('\n')
+#addUser('username1','hotmail','barfoo')
+#allrowsSelect(conn,'select * from user')
+
+
+# In[100]:
+
+
+#deleteUser('hotmail')
+#deleteUser('gmail')
+#deleteUser('yahoo')
+#allrowsSelect(conn,'select * from user')
+
+
 # In[ ]:
 
 
+# add clothing
 
+def addClothing(name, clothingType, material, fit, comfortability, primary_color, secondary_color, image_link):
+    query=f'''
+    '''
+    execSQL(conn,query)
 
