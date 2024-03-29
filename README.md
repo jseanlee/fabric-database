@@ -31,9 +31,14 @@ As daily log data accumulates, data visualizations are created to help the user 
 
 Currently building in Flask under Python language. Using python, we created an SQLite database that will contain user information, clothing information, and daily log information. The app runs helper functions that run queries to easily manage database. 
 
-ML models are currently being built in PyTorch. The idea will be to have an API key connected to said model, which can be accessed to run necessary tasks. 
+#### About model: 
+
+Currently collecting thousands of images of a variety of clothing items via web-scraping. Will need to format this data so it is formatted correctly during unsupervised learning, and label by listed specifications. Goal will be so that the image can correctly identify clothing type (shirt, jacket, pants, belt, etc.) and color(s). ML models are currently being built in PyTorch. The idea will be to have an API key connected to said model, which can be accessed to run necessary tasks. 
+
 
 ### Frontend: (backend higher priority)
+
+Using React framework for frontend. 
 
 <!-- ROADMAP -->
 ## Roadmap
