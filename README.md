@@ -55,7 +55,7 @@ Using React framework for frontend.
 
 Sean Lee - (https://linkedin.com/in/seanleej) - jiisung21@gmail.com
 
-Trenton vonHartitzsch - (https://linkedin.com/in/trenton-vonhartitzsch/) - need to get email
+Trenton vonHartitzsch - (https://linkedin.com/in/trenton-vonhartitzsch/) - trentonvonH@gmail.com
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
